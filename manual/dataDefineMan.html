@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>任意データの定義 </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="任意データの定義 ">
+    
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../resources/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first=First data-prev=Previous data-next=Next data-last=Last></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="任意データの定義">任意データの定義</h1>
+
+<h1 id="1-本書について">1 本書について</h1>
+<p>本書では、人流データ変換ツール（以下「本システム」という。）で用いるiniファイルの使用、記述方法について記載しています。</p>
+<h1 id="2-使い方">2 使い方</h1>
+<p>ファイル名「DefinedFormat.ini」(以下「設定ファイル」という。)を用意し、「MFConverterMain.py」と同じ階層に配置して使用します。
+人流データの変換実行時に読み込んだファイルフォーマットがプリセットで用意されている３社
+(<a href="https://www.blogwatcher.co.jp/">株式会社ブログウォッチャー</a>、<a href="https://agoop.co.jp/">株式会社Agoop</a>、<a href="https://www.unerry.co.jp/">株式会社Unerry</a>)
+のいずれのデータでもなかった場合に設定ファイルの読み込みを行い、変換可否の判断、変換を行います。</p>
+<h1 id="3-記述方法">3 記述方法</h1>
+<p>設定ファイルでは変換するデータの個別の値が変換元のファイルのどこに記述されているか、またその記述様式について設定します。
+汎用フォーマットの人流データへの変換には１つの移動体情報につき、下記が必要となります。</p>
+<ul>
+<li>移動体識別子</li>
+<li>移動体検出日時</li>
+<li>二次元座標(緯度,経度)</li>
+</ul>
+<p>また、選択項目として下記についても規定、変換することができます。</p>
+<ul>
+<li>性別</li>
+<li>年齢</li>
+</ul>
+<p>設定ファイルの記述方法は読み込むデータフォーマットによって異なります。</p>
+<h2 id="csvファイル">.CSVファイル</h2>
+<p>CSVファイルでは下記セクションについて設定します。</p>
+<table>
+<thead>
+<tr>
+<th>セクション</th>
+<th>パラメータ</th>
+<th>詳細</th>
+<th>必記要素</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>param_path</td>
+<td>移動体識別子</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>year</td>
+<td>param_path<br>date_format</td>
+<td>年</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>month</td>
+<td>param_path<br>date_format</td>
+<td>月</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>day</td>
+<td>param_path<br>date_format</td>
+<td>日</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>hour</td>
+<td>param_path<br>date_format</td>
+<td>時</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>minute</td>
+<td>param_path<br>date_format</td>
+<td>分</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>second</td>
+<td>param_path<br>date_format</td>
+<td>秒</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>param_path</td>
+<td>緯度</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td>param_path</td>
+<td>経度</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>param_path</td>
+<td>性別</td>
+<td>×</td>
+</tr>
+<tr>
+<td>age</td>
+<td>param_path</td>
+<td>年齢</td>
+<td>×</td>
+</tr>
+</tbody>
+</table>
+<p><code>param_path</code>に各数値の列のヘッダーを設定します。<br>
+日時関連のデータセクションでは<code>date_format</code>にISO8601書式で記述方法を設定します。<br></p>
+<p><strong>記述例</strong></p>
+<hr>
+<p><strong>変換元ファイル</strong></p>
+<table>
+<thead>
+<tr>
+<th>dailyid</th>
+<th>年</th>
+<th>月</th>
+<th>日</th>
+<th>時</th>
+<th>分</th>
+<th>秒</th>
+<th>緯度</th>
+<th>経度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>2025</td>
+<td>02</td>
+<td>07</td>
+<td>12</td>
+<td>30</td>
+<td>0</td>
+<td>35.681236</td>
+<td>139.767125</td>
+</tr>
+<tr>
+<td>002</td>
+<td>2025</td>
+<td>02</td>
+<td>07</td>
+<td>12</td>
+<td>32</td>
+<td>0</td>
+<td>35.680500</td>
+<td>139.767140</td>
+</tr>
+<tr>
+<td>003</td>
+<td>2025</td>
+<td>02</td>
+<td>07</td>
+<td>12</td>
+<td>34</td>
+<td>0</td>
+<td>35.680490</td>
+<td>139.766800</td>
+</tr>
+</tbody>
+</table>
+<p><strong>設定ファイル</strong></p>
+<pre><code>[id]
+param_header = dailyid
+[year]
+param_header =年
+date_format=%Y
+[month]
+param_header =月
+date_format=%m
+[day]
+param_header =日
+date_format=%d
+[hour]
+param_header =時
+date_format=%H
+[minute]
+param_header =分
+date_format=%M
+[second]
+param_header =秒
+date_format=%S
+[latitude]
+param_header =緯度
+[longitude]
+param_header =経度
+</code></pre>
+<h2 id="jsonファイル">.JSONファイル</h2>
+<p>JSONファイルでは下記セクションについて設定します。</p>
+<table>
+<thead>
+<tr>
+<th>セクション</th>
+<th>パラメータ</th>
+<th>説明</th>
+<th>必記要素</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>param_path<br>param_type</td>
+<td>移動体識別子</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>date</td>
+<td>param_path<br>param_type<br>date_format</td>
+<td>移動体検出日時</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>param_path<br>param_type</td>
+<td>緯度</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td>param_path<br>param_type</td>
+<td>経度</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>param_path<br>param_type</td>
+<td>性別</td>
+<td>×</td>
+</tr>
+<tr>
+<td>age</td>
+<td>param_path<br>param_type</td>
+<td>年齢</td>
+<td>×</td>
+</tr>
+</tbody>
+</table>
+<p>各セクションの<code>param_path</code>に値の記述位置をJsonPath形式で設定します。<br>
+<code>param_type</code>に記述形式(キー：<code>key</code>か値：<code>value</code>)を設定します。<br>
+<code>date</code>については<code>date_format</code>にISO8601書式で記述方法を設定します。<br></p>
+<p>JsonPathでは<br></p>
+<ul>
+<li>「$」がRootノードを示します。<br></li>
+<li>「.」で各要素を区切ります。<br></li>
+<li>任意要素は「*」で記載します。<br></li>
+<li>配列要素は「[ ]」で何番目の要素かを示します。<br>
+<br></li>
+</ul>
+<p><strong>記述例</strong></p>
+<hr>
+<p><strong>変換元ファイル</strong></p>
+<pre><code>{
+  &quot;timestamps&quot;: {
+	&quot;2025-02-04T12:00:00Z&quot;: [
+	  {
+		&quot;pedestrian_id&quot;: 1,
+		&quot;location&quot;: { &quot;latitude&quot;: 35.681236, &quot;longitude&quot;: 139.767125 },
+	  },
+	  {
+		&quot;pedestrian_id&quot;: 2,
+		&quot;location&quot;: { &quot;latitude&quot;: 35.680500, &quot;longitude&quot;: 139.766800 },
+	  }
+	],
+	&quot;2025-02-04T12:00:01Z&quot;: [
+	  {
+		&quot;pedestrian_id&quot;: 1,
+		&quot;location&quot;: { &quot;latitude&quot;: 35.681250, &quot;longitude&quot;: 139.767140 },
+	  },
+	  {
+		&quot;pedestrian_id&quot;: 2,
+		&quot;location&quot;: { &quot;latitude&quot;: 35.680490, &quot;longitude&quot;: 139.766800 },
+	  }
+	]
+  }
+}
+</code></pre>
+<p><strong>設定ファイル</strong></p>
+<pre><code>[id]
+param_path = =$.data[*].pedestrian_id
+param_type=value
+[date]
+param_path=$.data[*].timestamps[*]
+param_type=key
+[latitude]
+param_path =$.data[*].location.latitude
+param_type=value
+[longitude]
+param_path =$.data[*].location.longitude
+param_type=value
+</code></pre>
+<h2 id="xmlファイル">.XMLファイル</h2>
+<p>XMLファイルでは下記セクションについて設定します。</p>
+<table>
+<thead>
+<tr>
+<th>セクション</th>
+<th>パラメータ</th>
+<th>説明</th>
+<th>必記要素</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>param_path</td>
+<td>移動体識別子</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>date</td>
+<td>param_path<br>date_format</td>
+<td>移動体検出日時</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>param_path</td>
+<td>緯度</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td>param_path</td>
+<td>経度</td>
+<td>〇</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>param_path</td>
+<td>性別</td>
+<td>×</td>
+</tr>
+<tr>
+<td>age</td>
+<td>param_path</td>
+<td>年齢</td>
+<td>×</td>
+</tr>
+</tbody>
+</table>
+<p><code>param_path</code>に各数値のxPathを設定します。<br>
+<code>date</code>については<code>date_format</code>にISO8601書式で記述方法を設定します。<br></p>
+<p>xPathでは</p>
+<ul>
+<li>「\」で各要素を区切ります。<br></li>
+<li>属性情報として保存されている値は「@」で区切ります。<br></li>
+<li>任意要素は「*」で記載します。</li>
+</ul>
+<p><strong>記述例</strong></p>
+<hr>
+<p><strong>変換元ファイル</strong></p>
+<pre><code>&lt;PedestrianFlow&gt;
+	&lt;Pedestrian id=&quot;1&quot;&gt;
+		&lt;Position latitude=&quot;35.6895&quot; longitude=&quot;139.6917&quot; /&gt;
+		&lt;Timestamp&gt;2025-01-30T12:00:00Z&lt;/Timestamp&gt;
+	&lt;/Pedestrian&gt;		
+	&lt;Pedestrian id=&quot;2&quot;&gt;
+		&lt;Position latitude=&quot;35.6880&quot; longitude=&quot;139.6920&quot; /&gt;
+		&lt;Timestamp&gt;2025-01-30T12:00:05Z&lt;/Timestamp&gt;
+	&lt;/Pedestrian&gt;
+&lt;/PedestrianFlow&gt;
+</code></pre>
+<p><strong>設定ファイル</strong></p>
+<pre><code>[id]
+param_path = \PedestrianFlow\Pedestrian@id
+[date]
+param_path=\PedestrianFlow\Pedestriantimestamp[*]
+date_format=%Y-%m-%dT%H:%M:%SZ
+[latitude]
+param_path =\PedestrianFlow\Pedestrian\Position@latitude
+[longitude]
+param_path =\PedestrianFlow\Pedestrian\Position@longitude
+</code></pre>
+
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

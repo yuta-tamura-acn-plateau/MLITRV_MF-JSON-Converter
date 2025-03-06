@@ -1,12 +1,12 @@
-# 任意データの定義
+# データ変換定義ファイルの記述方法
 
 # 1 本書について
 
-本書では、人流データ変換ツール（以下「本システム」という。）で用いるiniファイルの使用、記述方法について記載しています。
+本書では、人流データ変換ツールで用いるiniファイルの使用、記述方法について記載しています。
 
 # 2 使い方
 
-ファイル名「DefinedFormat.ini」(以下「設定ファイル」という。)を用意し、「MFConverterMain.py」と同じ階層に配置して使用します。
+ファイル名「DefinedFormat.ini」を用意し、「MFConverterMain.py」と同じ階層に配置して使用します。
 人流データの変換実行時に読み込んだファイルフォーマットがプリセットで用意されている３社
 ([株式会社ブログウォッチャー](https://www.blogwatcher.co.jp/)、[株式会社Agoop](https://agoop.co.jp/)、[株式会社Unerry](https://www.unerry.co.jp/))
 のいずれのデータでもなかった場合に設定ファイルの読み込みを行い、変換可否の判断、変換を行います。
@@ -14,7 +14,20 @@
 # 3 記述方法
 
 設定ファイルでは変換するデータの個別の値が変換元のファイルのどこに記述されているか、またその記述様式について設定します。
-汎用フォーマットの人流データへの変換には１つの移動体情報につき、下記が必要となります。
+
+設定ファイルはINIファイル形式で記述され、セクションとパラメータを持ちます。<br>
+
+パラメータは名前と値を持ち,等号「=」で区切られ、左辺が名前、右辺が値になります。
+	
+	name=value
+	
+セクションはパラメータのグループ分けに用い、セクション名は角括弧「[]」で囲って宣言します。<br>
+各パラメータは直前に宣言されたセクションに属します。
+	
+	[section]
+
+	
+MF-JSON形式の人流データへの変換には１つの移動体情報につき、下記が必要となります。
 - 移動体識別子
 - 移動体検出日時
 - 二次元座標(緯度,経度)
@@ -25,7 +38,7 @@
 
 設定ファイルの記述方法は読み込むデータフォーマットによって異なります。
 
-## .CSVファイル
+## 3-1. CSVファイルの変換定義
 
 CSVファイルでは下記セクションについて設定します。
 
@@ -37,7 +50,7 @@ CSVファイルでは下記セクションについて設定します。
 |day          |param_path<br>date_format|日  |〇|
 |hour         |param_path<br>date_format|時 |〇|
 |minute         |param_path<br>date_format|分  |〇|
-|second          |param_path<br>date_format|秒  |〇|
+|second          |param_path<br>date_format|秒  |×|
 |latitude      |param_path|緯度  |〇|
 |longitude     |param_path| 経度 |〇|
 |gender        |param_path| 性別 |×|
@@ -86,7 +99,7 @@ __設定ファイル__
 	param_header =経度
 	
 
-## .JSONファイル
+## 3-2.JSONファイルの変換定義
 
 JSONファイルでは下記セクションについて設定します。
 
@@ -120,21 +133,21 @@ __変換元ファイル__
 		"2025-02-04T12:00:00Z": [
 		  {
 			"pedestrian_id": 1,
-			"location": { "latitude": 35.681236, "longitude": 139.767125 },
+			"location": { "latitude": 35.681236, "longitude": 139.767125 }
 		  },
 		  {
 			"pedestrian_id": 2,
-			"location": { "latitude": 35.680500, "longitude": 139.766800 },
+			"location": { "latitude": 35.680500, "longitude": 139.766800 }
 		  }
 		],
 		"2025-02-04T12:00:01Z": [
 		  {
 			"pedestrian_id": 1,
-			"location": { "latitude": 35.681250, "longitude": 139.767140 },
+			"location": { "latitude": 35.681250, "longitude": 139.767140 }
 		  },
 		  {
 			"pedestrian_id": 2,
-			"location": { "latitude": 35.680490, "longitude": 139.766800 },
+			"location": { "latitude": 35.680490, "longitude": 139.766800 }
 		  }
 		]
 	  }
@@ -143,19 +156,20 @@ __変換元ファイル__
 __設定ファイル__
 
 	[id]
-	param_path = =$.data[*].pedestrian_id
+	param_path=$.timestamps[*].*.pedestrian_id
 	param_type=value
 	[date]
-	param_path=$.data[*].timestamps[*]
+	param_path=$.timestamps[*]
 	param_type=key
+	date_format=%Y-%m-%dT%H:%M:%SZ
 	[latitude]
-	param_path =$.data[*].location.latitude
+	param_path=$.timestamps[*].*.location.latitude
 	param_type=value
 	[longitude]
-	param_path =$.data[*].location.longitude
+	param_path=$.timestamps[*].*.location.longitude
 	param_type=value
 
-## .XMLファイル
+## 3-3.XMLファイルの変換定義
 
 XMLファイルでは下記セクションについて設定します。
 
@@ -196,12 +210,12 @@ __変換元ファイル__
 __設定ファイル__
 	
 	[id]
-	param_path = \PedestrianFlow\Pedestrian@id
+	param_path=\PedestrianFlow\Pedestrian@id
 	[date]
 	param_path=\PedestrianFlow\Pedestriantimestamp[*]
 	date_format=%Y-%m-%dT%H:%M:%SZ
 	[latitude]
-	param_path =\PedestrianFlow\Pedestrian\Position@latitude
+	param_path=\PedestrianFlow\Pedestrian\Position@latitude
 	[longitude]
-	param_path =\PedestrianFlow\Pedestrian\Position@longitude
+	param_path=\PedestrianFlow\Pedestrian\Position@longitude
 

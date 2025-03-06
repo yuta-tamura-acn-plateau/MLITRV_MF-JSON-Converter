@@ -2,7 +2,7 @@
 
 ## 1 本書について
 
-本書は、人流データ変換ツール（以下「本システム」という。）の利用環境構築手順について記載しています。
+本書は、人流データ標準変換ツールの利用環境構築手順について記載しています。
 
 > [!TIP]
 > 本システムの構成や仕様の詳細については[技術検証レポート][TechnicalReport]も参考にしてください。
@@ -22,12 +22,12 @@
 
 ## 3 インストール手順
 
-1. [GitHubページ][MFConverterGitHub]から「MFConverterMain.exe」をダウンロードします。
-2. 「MFConverterMain.exe」を実行します。
+1. [GitHubページ][MFConverterGitHub]から「MFConverterMain.zip」をダウンロードします。
+2. zipファイルを解凍し、「MFConverterMain.exe」を実行します。
 
 ## 4 ビルド手順
 
-自身でソースファイルをダウンロードしビルドを行うことでプラグインを生成することができます<br>
+自身でソースファイルをダウンロードしビルドを行うことで本システムを実行することができます<br>
 ソースファイルは[こちら][MFConverterGitHub]からダウンロード可能です。
 GitHubからダウンロードしたソースファイルの構成は以下のようになっています。
 
@@ -39,10 +39,8 @@ MFConverter
 ```
 
 ビルド方法は次のとおりです。<br>
-本システムをビルドするにはPython 3.11が必要です。
-
-> [!TIP]
-> 仮想環境を作成して作業することを推奨します。
+本システムをビルドするには[Python 3.11][Python_official]および[pip][Python_pip]が必要です。<br>
+pipはPython3.4以降には標準で付属するため、Pythonのインストールと同時にインストールされます。<br>
 
 1. PowerShellでダウンロードした「MFConverter」フォルダに移動します。
 2. 次のコマンドを実行します。
@@ -64,10 +62,12 @@ Python MFConverterMain.py
 
 |  | データ種別 | 機能| 用途| 入力方法 |
 | - | - | - | - | - |
-| 1|人流データ | 人流データ | 変換元データ | 各自でご用意下さい<br>対応しているフォーマットや独自フォーマットの定義方法については[操作マニュアル][UserMan]、[任意データの定義][DataDefine]を参照下さい |
+| ①|データサプライヤから人流データを調達します<br>対応しているフォーマットや独自フォーマットの定義方法については[操作マニュアル][UserMan]、[データ変換定義ファイルの記述方法][DataDefine]を参照下さい  | 人流データ変換 | 変換元データ | 本システムのUIよりファイルダイアログを開き選択|
 
 <!---GitHubページなどは確定次第修正して下さい-->
-[TechnicalReport]: https://www.mlit.go.jp/plateau/news/
-[MFConverterGitHub]: https://www.mlit.go.jp/plateau/news/
+[TechnicalReport]: https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0102_ver01.pdf
+[MFConverterGitHub]: https://github.com/Project-PLATEAU/MF-JSON-Converter
 [UserMan]: userMan.md
 [DataDefine]: dataDefineMan.md
+[Python_official]: https://www.python.org/
+[Python_pip]: https://docs.python.org/ja/3.11/installing/index.html

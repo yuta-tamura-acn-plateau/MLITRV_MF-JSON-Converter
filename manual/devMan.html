@@ -80,10 +80,10 @@
 <h1 id="環境構築手順書">環境構築手順書</h1>
 
 <h2 id="1-本書について">1 本書について</h2>
-<p>本書は、人流データ変換ツール（以下「本システム」という。）の利用環境構築手順について記載しています。</p>
+<p>本書は、人流データ標準変換ツールの利用環境構築手順について記載しています。</p>
 <div class="TIP">
 <h5>Tip</h5>
-<p>本システムの構成や仕様の詳細については<a href="https://www.mlit.go.jp/plateau/news/">技術検証レポート</a>も参考にしてください。</p>
+<p>本システムの構成や仕様の詳細については<a href="https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0102_ver01.pdf">技術検証レポート</a>も参考にしてください。</p>
 </div>
 <h2 id="2-動作環境">2 動作環境</h2>
 <p>本システムの動作環境は以下のとおりです。</p>
@@ -107,11 +107,6 @@
 <td>同左</td>
 </tr>
 <tr>
-<td>GPU</td>
-<td>NVIDIA製GPU</td>
-<td>NVIDIA Geforce GTX1650以上（4GB以上のメモリ）</td>
-</tr>
-<tr>
 <td>メモリ</td>
 <td>4GB以上</td>
 <td>32GB以上</td>
@@ -128,19 +123,19 @@
 </tr>
 <tr>
 <td>ネットワーク</td>
-<td>必須</td>
+<td>不要</td>
 <td>同左</td>
 </tr>
 </tbody>
 </table>
 <h2 id="3-インストール手順">3 インストール手順</h2>
 <ol>
-<li><a href="https://www.mlit.go.jp/plateau/news/">GitHubページ</a>から「MFConverterMain.exe」をダウンロードします。</li>
-<li>「MFConverterMain.exe」を実行します。</li>
+<li><a href="https://github.com/Project-PLATEAU/MF-JSON-Converter">GitHubページ</a>から「MFConverterMain.zip」をダウンロードします。</li>
+<li>zipファイルを解凍し、「MFConverterMain.exe」を実行します。</li>
 </ol>
 <h2 id="4-ビルド手順">4 ビルド手順</h2>
-<p>自身でソースファイルをダウンロードしビルドを行うことでプラグインを生成することができます<br>
-ソースファイルは<a href="https://www.mlit.go.jp/plateau/news/">こちら</a>からダウンロード可能です。
+<p>自身でソースファイルをダウンロードしビルドを行うことで本システムを実行することができます<br>
+ソースファイルは<a href="https://github.com/Project-PLATEAU/MF-JSON-Converter">こちら</a>からダウンロード可能です。
 GitHubからダウンロードしたソースファイルの構成は以下のようになっています。</p>
 <pre><code class="lang-bash">MFConverter
   ├─FormatData
@@ -148,11 +143,8 @@ GitHubからダウンロードしたソースファイルの構成は以下の�
   └─Utils
 </code></pre>
 <p>ビルド方法は次のとおりです。<br>
-本システムをビルドするにはPython 3.11が必要です。</p>
-<div class="TIP">
-<h5>Tip</h5>
-<p>仮想環境を作成して作業することを推奨します。</p>
-</div>
+本システムをビルドするには<a href="https://www.python.org/">Python 3.11</a>および<a href="https://docs.python.org/ja/3.11/installing/index.html">pip</a>が必要です。<br>
+pipはPython3.4以降には標準で付属するため、Pythonのインストールと同時にインストールされます。<br></p>
 <ol>
 <li>PowerShellでダウンロードした「MFConverter」フォルダに移動します。</li>
 <li>次のコマンドを実行します。</li>
@@ -179,11 +171,11 @@ GitHubからダウンロードしたソースファイルの構成は以下の�
 </thead>
 <tbody>
 <tr>
-<td>1</td>
-<td>人流データ</td>
-<td>人流データ</td>
+<td>①</td>
+<td>データサプライヤから人流データを調達します<br>対応しているフォーマットや独自フォーマットの定義方法については<a href="userMan.html">操作マニュアル</a>、<a href="dataDefineMan.html">データ変換定義ファイルの記述方法</a>を参照下さい</td>
+<td>人流データ変換</td>
 <td>変換元データ</td>
-<td>各自でご用意下さい<br>対応しているフォーマットや独自フォーマットの定義方法については<a href="userMan.html">操作マニュアル</a>、<a href="dataDefineMan.html">任意データの定義</a>を参照下さい</td>
+<td>本システムのUIよりファイルダイアログを開き選択</td>
 </tr>
 </tbody>
 </table>

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>任意データの定義 </title>
+      <title>データ変換定義ファイルの記述方法 </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="任意データの定義 ">
+      <meta name="title" content="データ変換定義ファイルの記述方法 ">
     
     
       <link rel="shortcut icon" href="../favicon.ico">
@@ -77,18 +77,26 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="任意データの定義">任意データの定義</h1>
+<h1 id="データ変換定義ファイルの記述方法">データ変換定義ファイルの記述方法</h1>
 
 <h1 id="1-本書について">1 本書について</h1>
-<p>本書では、人流データ変換ツール（以下「本システム」という。）で用いるiniファイルの使用、記述方法について記載しています。</p>
+<p>本書では、人流データ変換ツールで用いるiniファイルの使用、記述方法について記載しています。</p>
 <h1 id="2-使い方">2 使い方</h1>
-<p>ファイル名「DefinedFormat.ini」(以下「設定ファイル」という。)を用意し、「MFConverterMain.py」と同じ階層に配置して使用します。
+<p>ファイル名「DefinedFormat.ini」を用意し、「MFConverterMain.py」と同じ階層に配置して使用します。
 人流データの変換実行時に読み込んだファイルフォーマットがプリセットで用意されている３社
 (<a href="https://www.blogwatcher.co.jp/">株式会社ブログウォッチャー</a>、<a href="https://agoop.co.jp/">株式会社Agoop</a>、<a href="https://www.unerry.co.jp/">株式会社Unerry</a>)
 のいずれのデータでもなかった場合に設定ファイルの読み込みを行い、変換可否の判断、変換を行います。</p>
 <h1 id="3-記述方法">3 記述方法</h1>
-<p>設定ファイルでは変換するデータの個別の値が変換元のファイルのどこに記述されているか、またその記述様式について設定します。
-汎用フォーマットの人流データへの変換には１つの移動体情報につき、下記が必要となります。</p>
+<p>設定ファイルでは変換するデータの個別の値が変換元のファイルのどこに記述されているか、またその記述様式について設定します。</p>
+<p>設定ファイルはINIファイル形式で記述され、セクションとパラメータを持ちます。<br></p>
+<p>パラメータは名前と値を持ち,等号「=」で区切られ、左辺が名前、右辺が値になります。</p>
+<pre><code>name=value
+</code></pre>
+<p>セクションはパラメータのグループ分けに用い、セクション名は角括弧「[]」で囲って宣言します。<br>
+各パラメータは直前に宣言されたセクションに属します。</p>
+<pre><code>[section]
+</code></pre>
+<p>MF-JSON形式の人流データへの変換には１つの移動体情報につき、下記が必要となります。</p>
 <ul>
 <li>移動体識別子</li>
 <li>移動体検出日時</li>
@@ -100,7 +108,7 @@
 <li>年齢</li>
 </ul>
 <p>設定ファイルの記述方法は読み込むデータフォーマットによって異なります。</p>
-<h2 id="csvファイル">.CSVファイル</h2>
+<h2 id="3-1-csvファイルの変換定義">3-1. CSVファイルの変換定義</h2>
 <p>CSVファイルでは下記セクションについて設定します。</p>
 <table>
 <thead>
@@ -152,7 +160,7 @@
 <td>second</td>
 <td>param_path<br>date_format</td>
 <td>秒</td>
-<td>〇</td>
+<td>×</td>
 </tr>
 <tr>
 <td>latitude</td>
@@ -261,7 +269,7 @@ param_header =緯度
 [longitude]
 param_header =経度
 </code></pre>
-<h2 id="jsonファイル">.JSONファイル</h2>
+<h2 id="3-2jsonファイルの変換定義">3-2.JSONファイルの変換定義</h2>
 <p>JSONファイルでは下記セクションについて設定します。</p>
 <table>
 <thead>
@@ -330,21 +338,21 @@ param_header =経度
 	&quot;2025-02-04T12:00:00Z&quot;: [
 	  {
 		&quot;pedestrian_id&quot;: 1,
-		&quot;location&quot;: { &quot;latitude&quot;: 35.681236, &quot;longitude&quot;: 139.767125 },
+		&quot;location&quot;: { &quot;latitude&quot;: 35.681236, &quot;longitude&quot;: 139.767125 }
 	  },
 	  {
 		&quot;pedestrian_id&quot;: 2,
-		&quot;location&quot;: { &quot;latitude&quot;: 35.680500, &quot;longitude&quot;: 139.766800 },
+		&quot;location&quot;: { &quot;latitude&quot;: 35.680500, &quot;longitude&quot;: 139.766800 }
 	  }
 	],
 	&quot;2025-02-04T12:00:01Z&quot;: [
 	  {
 		&quot;pedestrian_id&quot;: 1,
-		&quot;location&quot;: { &quot;latitude&quot;: 35.681250, &quot;longitude&quot;: 139.767140 },
+		&quot;location&quot;: { &quot;latitude&quot;: 35.681250, &quot;longitude&quot;: 139.767140 }
 	  },
 	  {
 		&quot;pedestrian_id&quot;: 2,
-		&quot;location&quot;: { &quot;latitude&quot;: 35.680490, &quot;longitude&quot;: 139.766800 },
+		&quot;location&quot;: { &quot;latitude&quot;: 35.680490, &quot;longitude&quot;: 139.766800 }
 	  }
 	]
   }
@@ -352,19 +360,20 @@ param_header =経度
 </code></pre>
 <p><strong>設定ファイル</strong></p>
 <pre><code>[id]
-param_path = =$.data[*].pedestrian_id
+param_path=$.timestamps[*].*.pedestrian_id
 param_type=value
 [date]
-param_path=$.data[*].timestamps[*]
+param_path=$.timestamps[*]
 param_type=key
+date_format=%Y-%m-%dT%H:%M:%SZ
 [latitude]
-param_path =$.data[*].location.latitude
+param_path=$.timestamps[*].*.location.latitude
 param_type=value
 [longitude]
-param_path =$.data[*].location.longitude
+param_path=$.timestamps[*].*.location.longitude
 param_type=value
 </code></pre>
-<h2 id="xmlファイル">.XMLファイル</h2>
+<h2 id="3-3xmlファイルの変換定義">3-3.XMLファイルの変換定義</h2>
 <p>XMLファイルでは下記セクションについて設定します。</p>
 <table>
 <thead>
@@ -438,14 +447,14 @@ param_type=value
 </code></pre>
 <p><strong>設定ファイル</strong></p>
 <pre><code>[id]
-param_path = \PedestrianFlow\Pedestrian@id
+param_path=\PedestrianFlow\Pedestrian@id
 [date]
 param_path=\PedestrianFlow\Pedestriantimestamp[*]
 date_format=%Y-%m-%dT%H:%M:%SZ
 [latitude]
-param_path =\PedestrianFlow\Pedestrian\Position@latitude
+param_path=\PedestrianFlow\Pedestrian\Position@latitude
 [longitude]
-param_path =\PedestrianFlow\Pedestrian\Position@longitude
+param_path=\PedestrianFlow\Pedestrian\Position@longitude
 </code></pre>
 
 </article>

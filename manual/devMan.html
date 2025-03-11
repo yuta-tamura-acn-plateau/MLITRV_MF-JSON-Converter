@@ -130,33 +130,10 @@
 </table>
 <h2 id="3-インストール手順">3 インストール手順</h2>
 <ol>
-<li><a href="https://github.com/Project-PLATEAU/MF-JSON-Converter">GitHubページ</a>から「MFConverterMain.zip」をダウンロードします。</li>
+<li><a href="https://github.com/Project-PLATEAU/MF-JSON-Converter">Releaseページ</a>から「MFConverterMain.zip」をダウンロードします。</li>
 <li>zipファイルを解凍し、「MFConverterMain.exe」を実行します。</li>
 </ol>
-<h2 id="4-ビルド手順">4 ビルド手順</h2>
-<p>自身でソースファイルをダウンロードしビルドを行うことで本システムを実行することができます<br>
-ソースファイルは<a href="https://github.com/Project-PLATEAU/MF-JSON-Converter">こちら</a>からダウンロード可能です。
-GitHubからダウンロードしたソースファイルの構成は以下のようになっています。</p>
-<pre><code class="lang-bash">MFConverter
-  ├─FormatData
-  ├─GUI
-  └─Utils
-</code></pre>
-<p>ビルド方法は次のとおりです。<br>
-本システムをビルドするには<a href="https://www.python.org/">Python 3.11</a>および<a href="https://docs.python.org/ja/3.11/installing/index.html">pip</a>が必要です。<br>
-pipはPython3.4以降には標準で付属するため、Pythonのインストールと同時にインストールされます。<br></p>
-<ol>
-<li>PowerShellでダウンロードした「MFConverter」フォルダに移動します。</li>
-<li>次のコマンドを実行します。</li>
-</ol>
-<pre><code class="lang-bash">pip install -r requirements.txt
-</code></pre>
-<ol start="3">
-<li>次のコマンドを実行すると、アプリが起動します。</li>
-</ol>
-<pre><code class="lang-bash">Python MFConverterMain.py
-</code></pre>
-<h2 id="5-準備物一覧">5 準備物一覧</h2>
+<h2 id="4-準備物一覧">5 準備物一覧</h2>
 <p>アプリケーションを利用するために以下のデータを入手します。<br>
 データの入力方法については操作マニュアルをご参照下さい。</p>
 <table>
@@ -179,7 +156,29 @@ pipはPython3.4以降には標準で付属するため、Pythonのインスト�
 </tr>
 </tbody>
 </table>
-<!---GitHubページなどは確定次第修正して下さい-->
+<h2 id="【参考】ビルド手順">参考 ビルド手順</h2>
+<p>自身でソースファイルをダウンロードしビルドを行うことで本システムを実行することができます<br>
+ソースファイルは<a href="https://github.com/Project-PLATEAU/MF-JSON-Converter">こちら</a>からダウンロード可能です。
+GitHubからダウンロードしたソースファイルの構成は以下のようになっています。</p>
+<pre><code class="lang-bash">MFConverter
+  ├─FormatData
+  ├─GUI
+  └─Utils
+</code></pre>
+<p>ビルド方法は次のとおりです。<br>
+本システムをビルドするには<a href="https://www.python.org/">Python 3.11</a>および<a href="https://docs.python.org/ja/3.11/installing/index.html">pip</a>が必要です。<br>
+pipはPython3.4以降には標準で付属するため、Pythonのインストールと同時にインストールされます。<br></p>
+<ol>
+<li>PowerShellでダウンロードした「MFConverter」フォルダに移動します。</li>
+<li>次のコマンドを実行します。</li>
+</ol>
+<pre><code class="lang-bash">pip install -r requirements.txt
+</code></pre>
+<ol start="3">
+<li>次のコマンドを実行すると、アプリが起動します。</li>
+</ol>
+<pre><code class="lang-bash">Python MFConverterMain.py
+</code></pre>
 
 </article>
           </div>

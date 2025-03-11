@@ -20,6 +20,12 @@ from PySide6.QtCore import QThread
 import FormatData.MFJson as mf
 import FormatData.DefinedFormat as dformat 
 
+INI_FILE    = '\DefinedFormat.ini'
+PARAM_PATH  = 'param_path'
+PARAM_TYPE  = 'param_type'
+DATE_FORMAT = 'date_format'
+
+
 
 #============================================================================================
 class ConverterClass(QThread):    
@@ -42,8 +48,7 @@ class ConverterClass(QThread):
     floating_header_list : list
     len_fixed_headers : int
     len_floating_headers : int
-    
-    columnIndex : list
+
 
     #============================================================================================
     def run(self):
@@ -67,8 +72,7 @@ class ConverterClass(QThread):
         ext = os.path.splitext(path)
 
         with self.lock:
-            if ext[-1].casefold() =='.csv'.casefold():
-                
+            if ext[-1].casefold() =='.csv'.casefold():                
                 if self.check_header_agoop(path):
                     print("convert agoop data")
                     self.convert_agoop(path)
@@ -96,7 +100,7 @@ class ConverterClass(QThread):
 
     #============================================================================================
     def count_csv_rows(self,path)->int:
-        with open(path, 'r') as file:
+        with open(path, 'r',encoding='utf-8') as file:
             reader = csv.reader(file)
             count = sum(1 for row in reader)
         return count
@@ -214,28 +218,29 @@ class ConverterClass(QThread):
         
     #============================================================================================
     def check_header_Template(self,path:str)->bool:
-        cfg = configparser.ConfigParser()
-        cfg.read(os.getcwd()+'\DefinedFormat.ini')     
+        cfg = configparser.RawConfigParser()
+        cfg.read(os.getcwd()+INI_FILE,'UTF-8')
         
         with open(path,encoding='utf-8')as f:          
             header = f.readline()
-            obj = list(filter(None,re.split(',|\n',header)))
-            print(str('dailyid' in obj))
+            obj = list(filter(None,re.split(',|\n',header)))            
                     
             for section in dformat.template_essential_list_in_csv:
                 if not section in cfg.sections():
+                    print(section+' is not Defined')
                     return False
                 for key,value in cfg.items(section):
-                    if key =='param_path':
+                    if key ==PARAM_PATH:
                         if value in obj:
                             break
+                    print(section+' param is not find in '+ os.path.splitext(os.path.basename(path))[0])
                     return False
             return True                      
     
 
     #Convert Each Row
     #============================================================================================
-    def date2Str_agoop_v6_3(self,x)->str:
+    def parse_agoop(self,x)->str:
         if self.exitflag == True:
             return
         id = x["dailyid"]
@@ -311,7 +316,9 @@ class ConverterClass(QThread):
  
     
     #============================================================================================
-    def convert_json_row_blog_watcher_v2(self,x)->str:
+    def parse_blog_watcher(self,x)->str:
+        if self.exitflag == True:
+            return
         id = x[self.header_identifer]
         if not id in self.data_dict:
             new_dict = dict()
@@ -354,7 +361,9 @@ class ConverterClass(QThread):
         return
     
     #============================================================================================
-    def date2Str_unerry(self,x)->str:        
+    def parse_unerry(self,x)->str:
+        if self.exitflag == True:
+            return
         id = x[self.header_identifer]
         if not id in self.data_dict:
             new_dict = dict()
@@ -414,7 +423,7 @@ class ConverterClass(QThread):
         return
     
     #============================================================================================
-    def date2Str_template_csv(self,x)->str:   
+    def parse_template_csv(self,x)->str:   
         id = x[self.header_identifer]
         if not id in self.data_dict:
             new_dict = dict()
@@ -443,7 +452,12 @@ class ConverterClass(QThread):
         datestr = datestr +'-'+ str(x[self.columnheaders['day']])
         datestr = datestr +'-'+ str(x[self.columnheaders['hour']])
         datestr = datestr +'-'+ str(x[self.columnheaders['minute']])
-        datestr = datestr +'-'+ str(x[self.columnheaders['second']])
+        
+        if "second" in self.columnheaders:
+            datestr = datestr +'-'+ str(x[self.columnheaders['second']])
+        else:
+            datestr = datestr +'-00'
+            
         
         date = datetime.strptime(datestr, self.datetime_format)
         
@@ -471,7 +485,7 @@ class ConverterClass(QThread):
                         dformat.agoop_header_list[3],
                         dformat.agoop_header_list[5],
                         dformat.agoop_header_list[6]],inplace = True)       
-        df.apply(self.date2Str_agoop_v6_3,axis=1)
+        df.apply(self.parse_agoop,axis=1)
         
         self.export_item_list = list(self.data_dict.values())
         print('collect_time = '+str(timer.lap()))
@@ -502,7 +516,7 @@ class ConverterClass(QThread):
         self.export_item_list = list()
         df = pd.read_csv(path)
         df.sort_values([self.header_identifer,dformat.blogwatcer_header_list[3]],inplace = True)
-        df.apply(self.convert_json_row_blog_watcher_v2,axis=1)
+        df.apply(self.parse_blog_watcher,axis=1)
         self.export_item_list = list(self.data_dict.values())
         print('collect_time = '+str(timer.lap()))
         
@@ -528,7 +542,7 @@ class ConverterClass(QThread):
         df = pd.read_csv(path)
         self.rows = self.count_csv_rows(path)
 
-        df.apply(self.date2Str_unerry,axis=1)
+        df.apply(self.parse_unerry,axis=1)
         self.export_item_list = list(self.data_dict.values())
         print('collect_time = '+str(timer.lap()))
            
@@ -582,13 +596,12 @@ class ConverterClass(QThread):
     def convert_template_csv(self,path):
         timer = timerClass()
         timer.start()   
-        self.rows = self.count_csv_rows(path)
-        #rows = self.count_csv_rows(path)
+        self.rows = self.count_csv_rows(path)        
         self.export_item_list = list()
         df = pd.read_csv(path)
         
-        cfg = configparser.ConfigParser()
-        cfg.read(os.getcwd()+'\DefinedFormat.ini')
+        cfg = configparser.RawConfigParser()
+        cfg.read(os.getcwd()+INI_FILE,'UTF-8')
         
         i = 0
         self.columnheaders = dict()
@@ -596,27 +609,28 @@ class ConverterClass(QThread):
         
         for section in dformat.template_essential_list_in_csv:
             for key,value in cfg.items(section):
-                if 'param_path' == key:
+                if key==PARAM_PATH:
                     self.columnheaders[section] =value
-                if 'date_format' == key:
+                if key==DATE_FORMAT:
                     date_formats_dict[section] =value
                 
         for section in cfg.sections():
             if section in dformat.template_optionallist_in_csv:
                 for key,value in cfg.items(section):
-                    if 'param_path' == key:
+                    if key==PARAM_PATH:
                         self.columnheaders[section] =value
-                    
+        
+        self.header_identifer = self.columnheaders[dformat.template_parameter_list_in_csv[0]]
+        
         self.datetime_format = date_formats_dict['year']
         self.datetime_format = self.datetime_format +'-'+ date_formats_dict['month']
         self.datetime_format = self.datetime_format +'-'+ date_formats_dict['day']
         self.datetime_format = self.datetime_format +'-'+ date_formats_dict['hour']
         self.datetime_format = self.datetime_format +'-'+ date_formats_dict['minute']
-        self.datetime_format = self.datetime_format +'-'+ date_formats_dict['second']
-
-        self.header_identifer = self.columnheaders[dformat.template_parameter_list_in_csv[0]]  
         
-        df.sort_values([self.header_identifer,
+        if 'second' in  cfg.sections():
+            self.datetime_format = self.datetime_format +'-'+ date_formats_dict['second']
+            df.sort_values([self.header_identifer,
                         self.columnheaders[dformat.template_essential_list_in_csv[1]],
                         self.columnheaders[dformat.template_essential_list_in_csv[2]],
                         self.columnheaders[dformat.template_essential_list_in_csv[3]],
@@ -624,8 +638,18 @@ class ConverterClass(QThread):
                         self.columnheaders[dformat.template_essential_list_in_csv[5]],
                         self.columnheaders[dformat.template_essential_list_in_csv[6]],
                         ],inplace = True)
+        else:
+            self.datetime_format = self.datetime_format + '-%S'
+            df.sort_values([self.header_identifer,
+                        self.columnheaders[dformat.template_essential_list_in_csv[1]],
+                        self.columnheaders[dformat.template_essential_list_in_csv[2]],
+                        self.columnheaders[dformat.template_essential_list_in_csv[3]],
+                        self.columnheaders[dformat.template_essential_list_in_csv[4]],
+                        self.columnheaders[dformat.template_essential_list_in_csv[5]],
+                        ],inplace = True)
         
-        df.apply(self.date2Str_template_csv,axis=1)
+        
+        df.apply(self.parse_template_csv,axis=1)
         
         self.export_item_list = list(self.data_dict.values())
         print('collect_time = '+str(timer.lap()))
@@ -673,8 +697,10 @@ class ConverterClass(QThread):
     
     #============================================================================================
     def pase_xml(self, element : Element, path : str, id : str, date : datetime):
-        this_path = path+ "\\" + element.tag
+        if self.exitflag == True:
+            return
         
+        this_path = path+ "\\" + element.tag
         if '@' in self.param_path['id']:
             if self.param_identifer['id'] in element.attrib:
                 if self.check_Xpath(self.param_path['id'], this_path):
@@ -746,17 +772,17 @@ class ConverterClass(QThread):
         self.data_dict =dict()
         self.export_item_list = list()
 
-        cfg = configparser.ConfigParser()
-        cfg.read(os.getcwd()+'\DefinedFormat.ini')
+        cfg = configparser.RawConfigParser()
+        cfg.read(os.getcwd()+INI_FILE,'UTF-8')
         self.param_path  = {}        
         self.param_identifer = {}
         
         for section in cfg.sections():
              for key, value in cfg.items(section):
-                if key=='param_path': 
+                if key==PARAM_PATH: 
                     self.param_path[section] = value
                     self.param_identifer[section] = list(filter(None,re.split(r'[\\@]',value)))[-1]   
-                elif key=='date_format':
+                elif key==DATE_FORMAT:
                     self.datetime_format = value
                 else:
                     pass
@@ -774,63 +800,96 @@ class ConverterClass(QThread):
             pass
 
         with open(export_file_path, 'w') as f:
-            json.dump(self.export_item_list, f, indent=2)
-        #self.progress_callback(1)    
+            json.dump(self.export_item_list, f, indent=2)           
         print('progressTime= '+str(timer.stop()))
         return
     
 #Convert JSON
     #============================================================================================
-    def check_Jsonpath(self,jPath,target : str) ->Boolean:              
-        if (len(jPath)<=0) or (len(target)<=1):           
+    def check_Jsonpath(self,jPath,target : str) ->Boolean:
+        def Compare_Segment(seg1 : str ,seg2 : str) -> Boolean:
+            if '[' in seg1:
+                if not '[' in seg2:
+                    return False
+                else:
+                    l1 = list(filter(None,re.split(r'\[',seg1))) 
+                    l2 = list(filter(None,re.split(r'\[',seg2)))
+                    if len(l1)!=len(l2):                    
+                        return False
+                    if not(('[*]' in seg1) or (':' in l1[1])): 
+                        if l1[1]!=l2[1]:
+                            return False                           
+                    if not '*' in l1[0]:
+                        return (l1[0]==l2[0])
+                    else:
+                        return True
+            else:
+                if '*' == seg1:
+                    return not('[' in seg2)         
+                else:
+                    return (seg1 == seg2)
+                  
+    #============================================================================================
+        if (len(target)<=1):           
             return False
         
         if jPath==target:
-            print('Ex'+str(target)+' and '+str(jPath))
-            return True
+            return True    
         
         tSegments = list(filter(None,re.split(r'[.]',target)))
         
-        #Detached Segments
-        
+        #Detached Segments        
         tip = 0
-        jSegments = list(filter(None,re.split(r'[.]',jPath)))        
-        
-        #wildcard
-        for i in range(len(jSegments)-1):
-            if '[' in jSegments[i]:
-                l1 = list(filter(None,re.split(r'[[]',jSegments[i]))) 
-                l2 = list(filter(None,re.split(r'[[]',tSegments[i+tip])))
-                if len(l1)!=len(l2):
-                    return False
-                if '[*]' in jSegments[i]:
-                    if l1[0] != l2[0]:
-                        return False
+        if '..' in jPath:#Check Omission
+            k=0
+            sentences = list(filter(None,jPath.split('..')))  
+            for i in range(len(sentences)):
+                jSegments = list(filter(None,re.split(r'[.]',sentences[i])))
+                for j in range(len(jSegments)):
+                    if Compare_Segment(jSegments[j],tSegments[k]):
+                        k +=1
                     else:
-                        pass                                                
-                elif ':' in l1[1]:
-                    pass   
-                elif not all(x == y and type(x) == type(y) for x, y in zip(l1, l2)):
-                    return False
-            elif '*' == jSegments[i]:
-                pass            
-            elif jSegments[i] != tSegments[i]:
+                        if j ==0:
+                            k +=1
+                            while k<len(tSegments):
+                                if Compare_Segment(jSegments[j],tSegments[k]):  
+                                    break
+                                else:
+                                    k +=1
+                                    if k >=len(tSegments):
+                                        return False
+                        else:
+                            return False
+            return (k==len(tSegments)-1)
+        else:
+            jSegments = list(filter(None,re.split(r'[.]',jPath)))        
+        
+            if len(tSegments)!=len(jSegments):
                 return False
-        print('Ex'+str(target)+' and '+str(jPath))
-        return True
+
+            #Check Wildcard       
+            for i in range(len(jSegments)):
+                if not Compare_Segment(jSegments[i],tSegments[i]):
+                    return False        
+            return True
     
     #============================================================================================
-    def pase_json(self,data,path : str, id : str, date : datetime):
+    def pase_json(self,data,path : str, id : str, date : datetime):                
+        if self.exitflag == True:
+            return
+        
         new_path : str
         lat = long = None
         gender = None
         age = None
         
+        
         if self.param_type["id"] == 'key':
-            if self.check_jsonpath(self.param_path["id"],path):
+            if self.check_Jsonpath(self.param_path["id"],path):
                 id = list(filter(None,re.split('.',path)))[-1]
         if self.param_type["date"] == 'key':
-            if self.check_jsonpath(self.param_path["date"],path):
+            print(path)
+            if self.check_Jsonpath(self.param_path["date"],path):
                 date = datetime.strptime(list(filter(None,re.split(r'[.]',path)))[-1], self.datetime_format)
 
         if isinstance(data, dict):
@@ -889,8 +948,8 @@ class ConverterClass(QThread):
                             
                     if id!=''  :#read ID
                         self.write2dict(id,date,lat,long,gender,age)
-                        
-            for i in range(len(data)-1):
+            
+            for i in range(len(data)):
                 new_path = path + '['+str(i)+']'
                 self.pase_json(data[i],new_path,id ,date)                   
         return
@@ -904,21 +963,25 @@ class ConverterClass(QThread):
         self.data_dict =dict()
         self.export_item_list = list()
 
-        self.param_path  = {}
+        self.param_path = {}
+        self.param_path_segments = {}
         self.param_identifer = {}
         self.param_type = {}
         
         #Read IniFile
-        cfg = configparser.ConfigParser()
-        cfg.read(os.getcwd()+'\DefinedFormat.ini')
+        cfg = configparser.RawConfigParser()
+        cfg.read(os.getcwd()+INI_FILE,'utf-8')
         for section in cfg.sections():
             for key, value in cfg.items(section):
-                if key=='param_path': 
+                if key==PARAM_PATH:
+                    if (len(value)<=1) or (value[0:2] != '$.'):
+                        print(section + ' Json path is not configured correctly')
+                        return
                     self.param_path[section] = value
                     self.param_identifer[section] = list(filter(None,re.split(r'[\\@.]',value)))[-1]
-                elif key=='param_type': 
+                elif key==PARAM_TYPE: 
                     self.param_type[section] = value    
-                elif key=='date_format':
+                elif key==DATE_FORMAT:
                     self.datetime_format = value
        
         #Convert

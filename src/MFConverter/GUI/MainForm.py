@@ -151,7 +151,7 @@ class MainFormClass(QMainWindow, Ui_MainWindow):
                 
         elif ext[-1].casefold() =='.csv'.casefold():
             obj = list()
-            with open(self.path,encoding="shift-jis") as f:#ERROR CHECK ENCORDING
+            with open(self.path,encoding="utf-8") as f:#ERROR CHECK ENCORDING
                 for line in islice(f, 21):
                     obj.append(re.split(',|\n',line))
                     

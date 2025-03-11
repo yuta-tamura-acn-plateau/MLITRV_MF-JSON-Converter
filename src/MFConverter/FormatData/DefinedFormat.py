@@ -224,11 +224,11 @@ template_essential_list_in_csv =[template_parameter_list_in_csv[0],
                                  template_parameter_list_in_csv[2],
                                  template_parameter_list_in_csv[3],
                                  template_parameter_list_in_csv[4],
-                                 template_parameter_list_in_csv[5],
-                                 template_parameter_list_in_csv[6],
+                                 template_parameter_list_in_csv[5],                                 
                                  template_parameter_list_in_csv[7],
                                  template_parameter_list_in_csv[8],]
 
-template_optionallist_in_csv =[template_parameter_list_in_csv[9],
+template_optionallist_in_csv =[template_parameter_list_in_csv[6],
+                               template_parameter_list_in_csv[9],
                                template_parameter_list_in_csv[10],]
 

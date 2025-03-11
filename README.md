@@ -32,8 +32,7 @@
 | 種別        | 名称     | バージョン   | 内容                        |
 | ----------- | --------|-------------|-----------------------------|
 | ソフトウェア | [Python](https://www.python.org/) |3.11  | インタープリンタ型の高水準汎用プログラミング言語 |
-| ライブラリ   | [MF-JSON](https://docs.ogc.org/is/19-045r3/19-045r3.html) | なし | 3次元形状の物体の移動データをJSONを用いて記述する簡潔な記述形式 |
-|             | [Pandas](https://pandas.pydata.org/) |2.2.3  | Pythonで利用可能なデータ解析を支援するライブラリ |
+| ライブラリ   | [Pandas](https://pandas.pydata.org/) |2.2.3  | Pythonで利用可能なデータ解析を支援するライブラリ |
 |             | [PySide6](https://pypi.org/project/PySide6/) |6.7.2  | Pythonで利用可能なGUI開発フレームワーク |
 
 ## 6. 動作環境
@@ -49,12 +48,12 @@
 
 ## 7. 本リポジトリのフォルダ構成
 
-| フォルダ名Lv1　　| フォルダ名Lv2   　   |　詳細  |
-|--------------|------------------|--------|
-|MFConverter   |　　　　　　　　　　　| システムのソースコード |
-|              |FormatData　　　　　|変換するデータの定義の管理  |
-|              |GUI  　　　　　　　　|各GUIのデザインと動作の管理  |
-|              |Utils　　　　　　　　| 経過時間管理 |
+| フォルダ名　| 　詳細  |
+|------------------|--------|
+| src/MFConverter   | システムのソースコード |
+| src/MFConverter/FormatData　　　　　|変換するデータの定義の管理  |
+| src/MFConverter/GUI  　　　　　　　　|各GUIのデザインと動作の管理  |
+| src/MFConverter/Utils　　　　　　　　| 経過時間管理 |
 
 
 ## 8. ライセンス
@@ -71,3 +70,4 @@
 ## 10. 参考資料
 - 技術検証レポート: https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0102_ver01.pdf
 - PLATEAU WebサイトのUse caseページ「汎用的な人流シミュレーションシステム」: https://www.mlit.go.jp/plateau/use-case/uc24-07/
+- OGC Moving Features JSON (MF-JSON)の定義: https://docs.ogc.org/is/19-045r3/19-045r3.html
